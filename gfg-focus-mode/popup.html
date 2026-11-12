@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFG Focus Mode</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo-badge">GFG</div>
+                <div>
+                    <h2>GFG Focus Mode</h2>
+                    <p class="subtitle">Ad & Promo Cleaner</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="card toggle-card">
+                <div class="toggle-info">
+                    <span class="toggle-label">Distraction Cleaner</span>
+                    <span id="status-badge" class="status-badge active">
+                        <span class="status-dot"></span>
+                        <span id="status-text">Active</span>
+                    </span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-switch" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="features-list">
+                <div class="feature-item">
+                    <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    <span>Covers Side Ads & Banner Promos</span>
+                </div>
+                <div class="feature-item">
+                    <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    <span>Hides Course & Job Cards</span>
+                </div>
+                <div class="feature-item">
+                    <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    <span>Expands & Centers Reading View</span>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <span>Works on all GFG tutorials & articles</span>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

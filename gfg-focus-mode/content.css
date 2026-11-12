@@ -1,0 +1,84 @@
+/* GeeksforGeeks Focus Mode & Ad Cover Styles */
+
+/* When focus mode is active */
+html.gfg-focus-active .gfg-ad-hidden,
+html.gfg-focus-active ins.adsbygoogle,
+html.gfg-focus-active div[id^="google_ads"],
+html.gfg-focus-active iframe[id^="google_ads"],
+html.gfg-focus-active iframe[src*="doubleclick.net"],
+html.gfg-focus-active iframe[src*="googlesyndication.com"],
+html.gfg-focus-active .ad-content,
+html.gfg-focus-active .ad-wrapper,
+html.gfg-focus-active .ad-container,
+html.gfg-focus-active [class*="ad-section"],
+html.gfg-focus-active [class*="ad_container"],
+html.gfg-focus-active [class*="adWrapper"],
+html.gfg-focus-active [class*="sponsored"],
+html.gfg-focus-active .rightBar,
+html.gfg-focus-active .rightSideBar,
+html.gfg-focus-active aside.right-sidebar,
+html.gfg-focus-active [class*="rightBar"],
+html.gfg-focus-active [class*="rightSidebar"],
+html.gfg-focus-active [class*="right_sidebar"],
+html.gfg-focus-active [class*="right-sidebar"],
+html.gfg-focus-active [class*="UpcomingCourses"],
+html.gfg-focus-active [class*="upcoming-courses"],
+html.gfg-focus-active [class*="JobPostings"],
+html.gfg-focus-active [class*="job-widget"],
+html.gfg-focus-active [class*="job_widget"],
+html.gfg-focus-active [class*="gfg-burger-menu-promo"],
+html.gfg-focus-active [class*="courses-wrapper"],
+html.gfg-focus-active [class*="premium-courses"],
+html.gfg-focus-active [class*="course_card"],
+html.gfg-focus-active [class*="explore_course"],
+html.gfg-focus-active .gfg_promotional_banner,
+html.gfg-focus-active .gfg-sidebar-promo,
+html.gfg-focus-active #Placement360,
+html.gfg-focus-active [class*="floating-ad"],
+html.gfg-focus-active [class*="bottom-ad"],
+html.gfg-focus-active [class*="header-ad"],
+html.gfg-focus-active [class*="topBanner"],
+html.gfg-focus-active [class*="TopBanner"],
+html.gfg-focus-active [class*="headerPromo"],
+html.gfg-focus-active [data-ad-client],
+html.gfg-focus-active [data-ad-slot] {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    max-height: 0 !important;
+    max-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Adjust Main Article Grid & Layout when side panel is hidden */
+html.gfg-focus-active .main_container,
+html.gfg-focus-active .article-page_main,
+html.gfg-focus-active [class*="mainContent"],
+html.gfg-focus-active [class*="articleContainer"],
+html.gfg-focus-active [class*="contentWrapper"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Clean up middle layout container */
+html.gfg-focus-active div.leftBar,
+html.gfg-focus-active div[class*="leftBar"],
+html.gfg-focus-active article,
+html.gfg-focus-active .left-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+}
+
+/* Subtle focus mode indicator banner on top right if desired (optional background polish) */
+html.gfg-focus-active ::-webkit-scrollbar {
+    width: 8px;
+}
