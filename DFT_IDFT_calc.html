@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern DFT/IDFT Calculator</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header & Tabs */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(to right, #1e293b, #0f172a);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background-color: var(--surface-hover);
+            color: var(--text-main);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        /* Content Area */
+        .content {
+            padding: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        label {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input[type="number"], input[type="text"] {
+            background-color: #0f172a;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        .points-input {
+            width: 80px;
+        }
+
+        /* Data Grid */
+        .data-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .data-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 20px 1fr 30px;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #0f172a;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .data-row span {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .data-row .val-input {
+            width: 100%;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--surface-hover);
+        }
+
+        /* Results Area */
+        .results-section {
+            margin-top: 2rem;
+            display: none;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .result-table th, .result-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-table td {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+        }
+
+        .magnitude-phase {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            .data-row {
+                grid-template-columns: 40px 1fr 10px 1fr 20px;
+                font-size: 0.9rem;
+            }
+            .content {
+                padding: 1rem;
+            }
+            .result-table th, .result-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Discrete Fourier Transform</h1>
+        <p style="color: var(--text-muted)">Calculate DFT or IDFT easily with complex numbers</p>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" id="tab-dft" onclick="switchMode('dft')">DFT (Forward)</div>
+        <div class="tab" id="tab-idft" onclick="switchMode('idft')">IDFT (Inverse)</div>
+    </div>
+
+    <div class="content">
+        <div class="controls">
+            <div class="control-group">
+                <label for="point-count">Number of points (N):</label>
+                <input type="number" id="point-count" class="points-input" value="4" min="2" max="64" onchange="generateInputs()">
+            </div>
+            <button class="btn btn-secondary" style="width: auto;" onclick="clearInputs()">Clear All</button>
+        </div>
+
+        <div class="data-grid" id="data-grid">
+            <!-- Inputs will be generated here dynamically -->
+        </div>
+
+        <button class="btn" id="calc-btn" onclick="calculate()">Calculate DFT</button>
+
+        <div class="results-section" id="results-section">
+            <h3 style="margin-bottom: 0.5rem;" id="result-title">Results</h3>
+            <div style="overflow-x: auto;">
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th id="th-index">k</th>
+                            <th>Complex Result (Re + Im j)</th>
+                            <th>Magnitude ∠ Phase</th>
+                        </tr>
+                    </thead>
+                    <tbody id="result-body">
+                        <!-- Results go here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentMode = 'dft'; // 'dft' or 'idft'
+
+    // Complex Number Class for Math Operations
+    class Complex {
+        constructor(re, im) {
+            this.re = re;
+            this.im = im;
+        }
+        add(other) { return new Complex(this.re + other.re, this.im + other.im); }
+        mul(other) {
+            return new Complex(
+                this.re * other.re - this.im * other.im,
+                this.re * other.im + this.im * other.re
+            );
+        }
+        get mag() { return Math.sqrt(this.re * this.re + this.im * this.im); }
+        get phase() { return Math.atan2(this.im, this.re); } // in radians
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        
+        // Update Tabs
+        document.getElementById('tab-dft').classList.toggle('active', mode === 'dft');
+        document.getElementById('tab-idft').classList.toggle('active', mode === 'idft');
+        
+        // Update Button & Labels
+        document.getElementById('calc-btn').innerText = mode === 'dft' ? 'Calculate DFT' : 'Calculate IDFT';
+        document.getElementById('th-index').innerText = mode === 'dft' ? 'k' : 'n';
+        
+        // Hide results until recalculated
+        document.getElementById('results-section').classList.remove('active');
+        
+        generateInputs();
+    }
+
+    function generateInputs() {
+        const n = parseInt(document.getElementById('point-count').value) || 4;
+        const grid = document.getElementById('data-grid');
+        grid.innerHTML = '';
+
+        const prefix = currentMode === 'dft' ? 'x' : 'X';
+
+        for (let i = 0; i < n; i++) {
+            const row = document.createElement('div');
+            row.className = 'data-row';
+            row.innerHTML = `
+                <span>${prefix}[${i}] =</span>
+                <input type="number" class="val-input re-input" placeholder="Real" step="any" value="0">
+                <span>+</span>
+                <input type="number" class="val-input im-input" placeholder="Imag" step="any" value="0">
+                <span>j</span>
+            `;
+            grid.appendChild(row);
+        }
+        document.getElementById('results-section').classList.remove('active');
+    }
+
+    function clearInputs() {
+        const reInputs = document.querySelectorAll('.re-input');
+        const imInputs = document.querySelectorAll('.im-input');
+        reInputs.forEach(input => input.value = '0');
+        imInputs.forEach(input => input.value = '0');
+        document.getElementById('results-section').classList.remove('active');
+    }
+
+        function formatNumber(num) {
+        // If the number is extremely close to zero, force it to 0
+        if (Math.abs(num) < 1e-7) return "0";
+        
+        // Round strictly to 4 decimal places and remove trailing zeros
+        return parseFloat(num.toFixed(4)).toString();
+    }
+    
+
+    function calculate() {
+        const reInputs = document.querySelectorAll('.re-input');
+        const imInputs = document.querySelectorAll('.im-input');
+        const N = reInputs.length;
+        
+        const inputs = [];
+        for (let i = 0; i < N; i++) {
+            const re = parseFloat(reInputs[i].value) || 0;
+            const im = parseFloat(imInputs[i].value) || 0;
+            inputs.push(new Complex(re, im));
+        }
+
+        const outputs = [];
+        const isInverse = currentMode === 'idft';
+        const sign = isInverse ? 1 : -1;
+
+        // Perform DFT / IDFT
+        for (let k = 0; k < N; k++) {
+            let sum = new Complex(0, 0);
+            for (let n = 0; n < N; n++) {
+                const theta = sign * 2 * Math.PI * k * n / N;
+                const w = new Complex(Math.cos(theta), Math.sin(theta));
+                sum = sum.add(inputs[n].mul(w));
+            }
+            if (isInverse) {
+                sum.re /= N;
+                sum.im /= N;
+            }
+            outputs.push(sum);
+        }
+
+        displayResults(outputs);
+    }
+
+        function displayResults(outputs) {
+        const tbody = document.getElementById('result-body');
+        tbody.innerHTML = '';
+        
+        const prefix = currentMode === 'dft' ? 'X' : 'x';
+
+        outputs.forEach((val, idx) => {
+            const reStr = formatNumber(val.re);
+            const imStr = formatNumber(val.im);
+            const magStr = formatNumber(val.mag);
+            
+            // Phase in degrees
+            let phaseDeg = val.phase * (180 / Math.PI);
+            if (Math.abs(val.re) < 1e-10 && Math.abs(val.im) < 1e-10) phaseDeg = 0; // Fix phase for 0+0j
+            const phaseStr = formatNumber(phaseDeg);
+
+            // Correct formatting: check the *rounded* string, not the raw value
+            let complexStr = '';
+            if (imStr.startsWith('-')) {
+                // Remove the minus sign from the string and format properly
+                complexStr = `${reStr} - ${imStr.substring(1)}j`;
+            } else {
+                complexStr = `${reStr} + ${imStr}j`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${prefix}[${idx}]</strong></td>
+                <td>${complexStr}</td>
+                <td class="magnitude-phase">${magStr} ∠ ${phaseStr}°</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('result-title').innerText = currentMode === 'dft' ? 'DFT Results (Frequency Domain)' : 'IDFT Results (Time Domain)';
+        document.getElementById('results-section').classList.add('active');
+        
+        // Smooth scroll to results
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+
+    // Initialize inputs on load
+    window.onload = generateInputs;
+
+</script>
+
+</body>
+</html>
